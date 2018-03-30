@@ -1,17 +1,12 @@
 package com.company;
 
-public class SavingsAccount extends BankAccount {
-    private String PIN;
-    private static double balance;
+import java.util.ArrayList;
 
-    public SavingsAccount(String P, double b){
-        super(P,b);
-    }
+public class SavingsAccount {
 
+    private double balance;
+    private ArrayList<Double> transactions = new ArrayList<>();
 
-    public void addMoney(Money m){
-        balance += m.getAmount();
-    }
 
 
 
@@ -35,6 +30,14 @@ public class SavingsAccount extends BankAccount {
             balance+= tran.getMoney().getAmount();
         }
 
+    }
+
+    public void changeBalance(double d){
+        balance += d;
+        transactions.add(d);
+    }
+    public ArrayList<Double> getTransactions() {
+        return transactions;
     }
 
 }

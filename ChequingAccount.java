@@ -1,12 +1,10 @@
 package com.company;
+import java.util.ArrayList;
+public class ChequingAccount {
 
-public class ChequingAccount extends BankAccount {
-    private String PIN;
-    private double balance;
+    private double balance =0;
+    private ArrayList<Double> transactions = new ArrayList<>();
 
-    public ChequingAccount(String P, double b){
-        super(P,b);
-    }
     public void transfer(BankAccount accW, BankAccount accD, double amt){
 
         Money mo = new Money("transfer", amt);
@@ -16,6 +14,19 @@ public class ChequingAccount extends BankAccount {
 
         accW.registerTransaction(with);
         accD.registerTransaction(dep);
+    }
+
+    public double getBalance(){
+        return balance;
+    }
+
+    public void changeBalance(Double n){
+        balance += n;
+        transactions.add(n);
+    }
+
+    public ArrayList<Double> getTransactions() {
+        return transactions;
     }
 
     public void registerTransaction(Transaction tran){
@@ -28,4 +39,8 @@ public class ChequingAccount extends BankAccount {
 
     }
 
+
+    public String toString() {
+        return "Balance: " + balance;
+    }
 }

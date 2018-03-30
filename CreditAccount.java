@@ -1,13 +1,13 @@
 package com.company;
 
-public class CreditAccount extends BankAccount {
+import java.util.ArrayList;
 
-    private String PIN;
-    private double balance;
+public class CreditAccount {
 
-    public CreditAccount(String P, double b){
-        super(P,b);
-    }
+    private double balance=0;
+    private ArrayList<Double> transactions = new ArrayList<>();
+
+
 
     public void transfer(BankAccount accW, BankAccount accD, double amt){
 
@@ -18,6 +18,19 @@ public class CreditAccount extends BankAccount {
 
         accW.registerTransaction(with);
         accD.registerTransaction(dep);
+    }
+
+    public double getBalance(){
+        return balance;
+    }
+
+    public void changeBalance(double d){
+        balance += d;
+        transactions.add(d);
+    }
+
+    public ArrayList<Double> getTransactions() {
+        return transactions;
     }
 
     public void registerTransaction(Transaction tran){
