@@ -1,3 +1,4 @@
+//package gui;
 package com.company;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -22,11 +23,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ChoiceBox;
 import java.util.ArrayList;
 
-public class Main extends Application {
+public class demotest extends Application {
     private  Button nextWith, exitWith, backWith, exitDep, backDep,nextDep,transferMain, withdrawalMain,
             depositMain, exitMain, accountinfoMain, balanceAccI, transactionAccI, nextAccI, exitAccI, backAccI,
-            signHome, exitHome;
-    public static User user1 = new User("123");
+            signHome, exitHome, nextTran, backTran;
+    private User user1 = new User("123");
+
 
     @Override
     public void start(Stage stage) {
@@ -72,7 +74,7 @@ public class Main extends Application {
 //Main buttons
         withdrawalMain = new Button("Withdrawal");
         depositMain = new Button("Deposit");
-        transferMain = new Button("Balance");
+        transferMain = new Button("Transfer");
         accountinfoMain = new Button("Account Info");
         exitMain = new Button("Exit");
 
@@ -125,6 +127,39 @@ public class Main extends Application {
 //stage.show();
 
 //End of Withdrawal
+
+//transfer
+        GridPane paneTran = new GridPane();
+        paneTran.setPadding(new Insets(10,10,10,10));
+        paneTran.setHgap(10);
+        paneTran.setVgap(10);
+
+        ChoiceBox <String> DropfromTran = new ChoiceBox <String>();
+        ChoiceBox <String> DroptoTran = new ChoiceBox <String>();
+        DropfromTran.getItems().addAll("Credit","Chequings","Savings");
+        DroptoTran.getItems().addAll("Credit","Chequings","Savings");
+        TextField amounttextTran = new TextField ();
+        Label amountlabelTran = new Label("Amount");
+        Label fromlabelTran = new Label("From");
+        Label tolabelTran = new Label("To");
+
+        nextTran = new Button("Next");
+        backTran = new Button("Back");
+
+
+
+        paneTran.add(DropfromTran,1,0);
+        paneTran.add(fromlabelTran,0,0);
+        paneTran.add(DroptoTran,1,1);
+        paneTran.add(tolabelTran,0,1);
+        paneTran.add(amountlabelTran,0,2);
+        paneTran.add(amounttextTran,1,2);
+        paneTran.add(backTran,0,3);
+        paneTran.add(nextTran,1,3);
+
+
+        Scene sceneTran = new Scene(paneTran);
+        //transfer
 
 //Start of DEPOSIT
         GridPane paneDep = new GridPane();
@@ -202,11 +237,9 @@ public class Main extends Application {
 
         signHome.setOnAction(e ->{
             if(isRealPin(textHome.getText())) {
-
                 stage.setTitle("ATM");
                 stage.setScene(sceneMain);
             }
-
             else {
                 System.out.println("kjnfknfkrfn");
             }
@@ -219,16 +252,41 @@ public class Main extends Application {
         });
 
         nextWith.setOnAction(e ->{
-            String s1 = withDrop.getValue();
-            String s2 = amounttextWith.getText();
-            registerWithdrawal(s1, s2);
-            //System.out.println(withDrop.getValue());
-            //System.out.println(amounttextWith.getText());
+            registerWithdrawal(withDrop.getValue(), amounttextWith.getText());
+        });
+        exitWith.setOnAction(e-> {
+            stage.close();
         });
 
+
+
         depositMain.setOnAction(e -> {
-            stage.setTitle("Deposit");
+            stage.setTitle("deposit");
             stage.setScene(sceneDep);
+        });
+
+        nextDep.setOnAction(e -> {
+            registerDeposit(DropDep.getValue(), amounttextDep.getText());
+        });
+        exitDep.setOnAction(e-> {
+            stage.close();
+        });
+
+
+
+        nextTran.setOnAction(e -> {
+            registerTransfer(DropfromTran.getValue(), DroptoTran.getValue(), amounttextTran.getText());
+        });
+
+        backTran.setOnAction(e-> {
+            stage.setScene(sceneMain);
+            stage.setTitle("ATM");
+        });
+
+
+        transferMain.setOnAction(e ->{
+            stage.setScene(sceneTran);
+            stage.setTitle("Transfer");
         });
 
     }
@@ -246,15 +304,79 @@ public class Main extends Application {
         }
     }
 
-    private void registerWithdrawal(String s1, String s2){
-        if(s1.equals("credit")){
+    private void registerDeposit( String s1, String s2){
+        if(s1.equals("Credit")){
+            double s = Double.valueOf(s2);
+            user1.getCredit().changeBalance(s);
+            System.out.println(user1.getCredit().getBalance());
         }
         else if(s1.equals("Chequings")){
-            user1.getChequings().changeBalance(Double.parseDouble(s2));
-            System.out.println(user1.getChequings().getBalance());
+            double s = Double.valueOf(s2);
+            user1.getChequings().changeBalance(s);
+        }
+        else if(s1.equals("Savings")) {
+            double s = Double.valueOf(s2);
+            user1.getSavings().changeBalance(s);
         }
         else{
+            System.out.println("you must select a account and enter a number");
+        }
+    }
 
+    private void registerWithdrawal(String s1, String s2){
+
+        if(s1.equals("Credit")){
+            double s = Double.valueOf(s2);
+            user1.getCredit().changeBalance(-s);
+        }
+        else if(s1.equals("Chequings")){
+            double s = Double.valueOf(s2);
+            user1.getChequings().changeBalance(-s);
+            System.out.println(user1.getChequings().getBalance());
+        }
+        else if(s1.equals("Savings")){
+            double s = Double.valueOf(s2);
+            user1.getSavings().changeBalance(-s);
+        }
+        else{
+            System.out.println("you must select a account and enter a number");
+        }
+
+
+
+
+
+        }
+    private void registerTransfer(String from, String to, String amt){
+        double d = Double.valueOf(amt);
+        if(from.equals("Savings")&& to.equals("Chequings")){
+            user1.getChequings().changeBalance(d);
+            user1.getSavings().changeBalance(-d);
+            System.out.println(user1.getChequings());
+            System.out.println(user1.getSavings());
+        }
+        else if(from.equals("Savings")&& to.equals("Credit")){
+            user1.getCredit().changeBalance(d);
+            user1.getSavings().changeBalance(-d);
+        }
+        else if(from.equals("Credit")&& to.equals("Chequings")){
+            user1.getChequings().changeBalance(d);
+            user1.getCredit().changeBalance(-d);
+        }
+        else if(from.equals("Credit")&& to.equals("Savings")){
+            user1.getSavings().changeBalance(d);
+            user1.getCredit().changeBalance(-d);
+        }
+        else if (from.equals("Chequings") && to.equals("Savings")){
+            user1.getChequings().changeBalance(-d);
+            user1.getSavings().changeBalance(d);
+        }
+        else if (from.equals("Chequings") && to.equals("Credit")){
+            user1.getChequings().changeBalance(-d);
+            user1.getCredit().changeBalance(d);
+        }
+        else{
+            System.out.println("blah");
         }
     }
 

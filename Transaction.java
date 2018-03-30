@@ -3,6 +3,7 @@ package com.company;
 import java.util.ArrayList;
 
 public class Transaction {
+
     private Money mon;
     //form is plus or minus
     private String form;
@@ -14,7 +15,6 @@ public class Transaction {
     public Transaction(Money m, String f){
         mon = m;
         form =f;
-
     }
 
     public String getForm(){
